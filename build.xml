@@ -10,6 +10,27 @@
 <project name="SHEF" default="default" basedir=".">
     <description>Builds, tests, and runs the project SHEF.</description>
     <import file="nbproject/build-impl.xml"/>
+
+
+     <tstamp>  <format property="timestamp" pattern="yyyy-MM-dd" />  </tstamp>
+
+
+     <target name="-post-jar" description="Zip the source and binaries">
+         <mkdir dir="${dist.dir}"/>
+         
+         <zip zipfile="${dist.dir}/SHEF-src-${timestamp}.zip">
+         <fileset dir="." excludes="build/**, dist/**"/>
+         </zip>
+
+         <zip zipfile="${dist.dir}/SHEF-bin-${timestamp}.zip">
+         <fileset dir="." excludes="src/**, lib/**, build/**, dist/**.zip"/>
+         </zip>
+
+          
+     </target>
+
+
+
     <!--
 
     There exist several targets which are by default empty and which can be 
