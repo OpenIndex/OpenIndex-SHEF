@@ -809,7 +809,7 @@ public class SHEFEditor extends JFrame
 
                 JFrame f = new SHEFEditor();
                 f.setSize(800, 600);
-                f.setTitle("WYSIWYG HTML TEST");
+                f.setTitle("SHEF");
                 f.setLocationRelativeTo(null);
                 f.setVisible(true);
             }
