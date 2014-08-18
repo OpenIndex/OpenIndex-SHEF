@@ -14,24 +14,25 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @author Andreas Rudolph
  *
  */
+@Deprecated
 public class SourceCodeEditor extends RSyntaxTextArea
 {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
-    
-    
+
+
     /**
-     * 
+     *
      */
     public SourceCodeEditor()
     {
         super();
-        
+
         //SyntaxFactory.setSyntaxCatalog(getClass().getResource("/resources/syntax.catalog.xml"));
         //SyntaxFactory.loadSyntaxes();
-        
+
         //setLineHighlight(true);
         //setBracketHighlight(true);
         //setAntiAlias(true);
@@ -43,7 +44,7 @@ public class SourceCodeEditor extends RSyntaxTextArea
         setOpaque(true);
         setBracketMatchingEnabled( true );
         //setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        
+
         /*// Load default theme
         Properties themes = new Properties();
         InputStream in = null;
@@ -51,10 +52,10 @@ public class SourceCodeEditor extends RSyntaxTextArea
         {
             in = getClass().getResource("/net/atlanticbb/tantlinger/ui/text/syntax.properties").openStream();
             themes.load(in);
-            setTheme(themes, "default");            
+            setTheme(themes, "default");
         }
         catch(Exception e)
-        {            
+        {
             e.printStackTrace();
         }
         finally
@@ -65,11 +66,11 @@ public class SourceCodeEditor extends RSyntaxTextArea
             }
             catch(Exception ex)
             {
-               
+
             }
         }*/
     }
-    
+
     /*public void setTheme(Properties props)
     {
         String prefix = "default";
@@ -77,23 +78,23 @@ public class SourceCodeEditor extends RSyntaxTextArea
         {
             SyntaxDocument d = (SyntaxDocument)getDocument();
             prefix = d.getSyntax().getName();
-            
+
         }
         catch(ClassCastException ex)
         {
-            
+
         }
-        
+
         setTheme(props, prefix);
     }*/
-    
-    
+
+
     /**
      * Set a color theme from a properties file
      * @param props The Properties object
      * @param prefix The prefix to use when getting the keys
      *
-    public void setTheme(Properties props, String prefix) //throws Exception 
+    public void setTheme(Properties props, String prefix) //throws Exception
     {
         SyntaxStyle[] aStyles = getSyntaxStyles();
 
@@ -165,11 +166,11 @@ public class SourceCodeEditor extends RSyntaxTextArea
         //gutter.setBracketScopeForeground(parseColor(props.getProperty(prefix + ".bracketscope.fg")));
         //gutter.setBracketScopeBackground(parseColor(props.getProperty(prefix + ".bracketscope.bg")));
     }*/
-    
+
     /**
      * Parse a color from the syntax.properties file. It can have the format
      * RRGGBB in hex or AARRGGBB (with alpha blending)
-     * 
+     *
      * @param color The color string
      * @return A color object
      */
@@ -203,14 +204,14 @@ public class SourceCodeEditor extends RSyntaxTextArea
         {
             //throw new Exception("Invalid color data", e);
         }
-        
+
         return Color.black;
     }
 
     /**
      * Parse a font from the syntax.properties file. Takes a comma-separated
      * list of the plain,bold and italic parameters
-     * 
+     *
      * @param font The font string
      * @return A font style constant
      */

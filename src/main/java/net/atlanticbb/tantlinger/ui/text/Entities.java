@@ -36,7 +36,7 @@ import java.util.TreeMap;
  * @author <a href="mailto:alex@purpletech.com">Alexander Day Chaffee</a>
  * @author <a href="mailto:ggregory@seagullsw.com">Gary Gregory</a>
  * @since 2.0
- * @version $Id: Entities.java,v 1.1 2007/11/20 13:49:17 cvsbob Exp $
+ * @version $Id: Entities.java 1995 2013-01-17 05:24:51Z andy $
  */
 public class Entities
 {
