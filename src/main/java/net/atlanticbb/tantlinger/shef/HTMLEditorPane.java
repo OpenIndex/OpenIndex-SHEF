@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.DefaultListCellRenderer;
@@ -36,7 +35,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -48,7 +46,6 @@ import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.undo.UndoManager;
-
 import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.DefaultAction;
 import net.atlanticbb.tantlinger.ui.UIUtils;
@@ -72,16 +69,12 @@ import net.atlanticbb.tantlinger.ui.text.actions.HTMLLinkAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLTableAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
 import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;
-
-
-import novaworx.syntax.SyntaxFactory;
-import novaworx.textpane.SyntaxDocument;
-import novaworx.textpane.SyntaxGutter;
-import novaworx.textpane.SyntaxGutterBase;
-
 import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
+import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  *
@@ -333,7 +326,7 @@ public class HTMLEditorPane extends JPanel
         formatToolBar.add(paragraphCombo);
         formatToolBar.addSeparator();
                 
-        Vector fonts = new Vector();
+        Vector<String> fonts = new Vector<String>();
         fonts.add("Default");
         fonts.add("serif");
         fonts.add("sans-serif");
@@ -433,15 +426,14 @@ public class HTMLEditorPane extends JPanel
      */
     private Action[] toArray(ActionList lst)
     {
-        List acts = new ArrayList();
+        List<Action> acts = new ArrayList<Action>();
         for(Iterator it = lst.iterator(); it.hasNext();)
         {
             Object v = it.next();
             if(v != null && v instanceof Action)
-                acts.add(v);
+                acts.add(( Action ) v);
         }
-        
-        return (Action[])acts.toArray(new Action[acts.size()]);
+        return acts.toArray( new Action[acts.size()] );
     }
         
     private void configToolbarButton(AbstractButton button)
@@ -475,11 +467,12 @@ public class HTMLEditorPane extends JPanel
         
         tabs.addTab("Edit", new JScrollPane(wysEditor));
         
-        JScrollPane scrollPane = new JScrollPane(srcEditor);        
-        SyntaxGutter gutter = new SyntaxGutter(srcEditor);
-        SyntaxGutterBase gutterBase = new SyntaxGutterBase(gutter);
-        scrollPane.setRowHeaderView(gutter);
-        scrollPane.setCorner(ScrollPaneConstants.LOWER_LEFT_CORNER, gutterBase);
+        //JScrollPane scrollPane = new JScrollPane(srcEditor);
+        //SyntaxGutter gutter = new SyntaxGutter(srcEditor);
+        //SyntaxGutterBase gutterBase = new SyntaxGutterBase(gutter);
+        //scrollPane.setRowHeaderView(gutter);
+        //scrollPane.setCorner(ScrollPaneConstants.LOWER_LEFT_CORNER, gutterBase);
+        RTextScrollPane scrollPane = new RTextScrollPane( srcEditor );
         
         tabs.addTab("HTML", scrollPane);
         tabs.addChangeListener(new ChangeListener()
@@ -494,8 +487,12 @@ public class HTMLEditorPane extends JPanel
     private SourceCodeEditor createSourceEditor()
     {        
         SourceCodeEditor ed = new SourceCodeEditor();
-        SyntaxDocument doc = new SyntaxDocument();
-        doc.setSyntax(SyntaxFactory.getSyntax("html"));        
+        ed.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_HTML );
+
+        RSyntaxDocument doc = ( RSyntaxDocument ) ed.getDocument();
+        //RSyntaxDocument doc = new RSyntaxDocument();
+        //SyntaxDocument doc = new SyntaxDocument();
+        //doc.setSyntax(SyntaxFactory.getSyntax("html"));
         CompoundUndoManager cuh = new CompoundUndoManager(doc, new UndoManager());        
         
         doc.addUndoableEditListener(cuh);
@@ -554,7 +551,8 @@ public class HTMLEditorPane extends JPanel
         {           
             String topText = removeInvalidTags(srcEditor.getText());            
             wysEditor.setText("");
-            insertHTML(wysEditor, topText, 0);            
+            insertHTML(wysEditor, topText, 0);
+            wysEditor.setCaretPosition( 0 );
             CompoundUndoManager.discardAllEdits(wysEditor.getDocument());
             
         }
@@ -566,6 +564,7 @@ public class HTMLEditorPane extends JPanel
                 String t = deIndent(removeInvalidTags(topText));
                 t = Entities.HTML40.unescapeUnknownEntities(t);                
                 srcEditor.setText(t);
+                srcEditor.setCaretPosition( 0 );
             }            
             CompoundUndoManager.discardAllEdits(srcEditor.getDocument());            
         }       
@@ -575,27 +574,24 @@ public class HTMLEditorPane extends JPanel
         fontFamilyCombo.setEnabled(tabs.getSelectedIndex() == 0);
         updateState();        
     }
-    
+
     public void setText(String text)
     {
     	String topText = removeInvalidTags(text);  
         
         if(tabs.getSelectedIndex() == 0)
         {           
-                      
             wysEditor.setText("");
-            insertHTML(wysEditor, topText, 0);            
+            insertHTML(wysEditor, topText, 0);
             CompoundUndoManager.discardAllEdits(wysEditor.getDocument());
             
         }
         else 
         {
-            {
-                String t = deIndent(removeInvalidTags(topText));
-                t = Entities.HTML40.unescapeUnknownEntities(t);                
-                srcEditor.setText(t);
-            }            
-            CompoundUndoManager.discardAllEdits(srcEditor.getDocument());            
+            String t = deIndent(removeInvalidTags(topText));
+            t = Entities.HTML40.unescapeUnknownEntities(t);
+            srcEditor.setText(t);
+            CompoundUndoManager.discardAllEdits(srcEditor.getDocument());
         }
     }
     

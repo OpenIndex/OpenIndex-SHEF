@@ -5,22 +5,16 @@ package net.atlanticbb.tantlinger.ui.text;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.StringTokenizer;
-
-import novaworx.syntax.SyntaxFactory;
-import novaworx.syntax.Token;
-import novaworx.textpane.SyntaxDocument;
-import novaworx.textpane.SyntaxStyle;
-import novaworx.textpane.SyntaxTextPane;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 
 /**
  * @author Bob Tantlinger
+ * @author Andreas Rudolph
  *
  */
-public class SourceCodeEditor extends SyntaxTextPane
+public class SourceCodeEditor extends RSyntaxTextArea
 {
     /**
      * 
@@ -35,19 +29,22 @@ public class SourceCodeEditor extends SyntaxTextPane
     {
         super();
         
-        SyntaxFactory.setSyntaxCatalog(getClass().getResource("/resources/syntax.catalog.xml"));
-        SyntaxFactory.loadSyntaxes();
+        //SyntaxFactory.setSyntaxCatalog(getClass().getResource("/resources/syntax.catalog.xml"));
+        //SyntaxFactory.loadSyntaxes();
         
-        setLineHighlight(true);
-        setBracketHighlight(true);
-        setAntiAlias(true);
+        //setLineHighlight(true);
+        //setBracketHighlight(true);
+        //setAntiAlias(true);
+        //setOpaque(true);
+        //setCaretOnDelay(500);
+        //setCaretOffDelay(500);
+        //setFont(new Font("Default", Font.PLAIN, 12));
+
         setOpaque(true);
-        setCaretOnDelay(500);
-        setCaretOffDelay(500);
+        setBracketMatchingEnabled( true );
+        //setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         
-        setFont(new Font("Default", Font.PLAIN, 12));
-        
-        /* Load default theme */
+        /*// Load default theme
         Properties themes = new Properties();
         InputStream in = null;
         try
@@ -70,10 +67,10 @@ public class SourceCodeEditor extends SyntaxTextPane
             {
                
             }
-        }
+        }*/
     }
     
-    public void setTheme(Properties props) 
+    /*public void setTheme(Properties props)
     {
         String prefix = "default";
         try
@@ -88,14 +85,14 @@ public class SourceCodeEditor extends SyntaxTextPane
         }
         
         setTheme(props, prefix);
-    }
+    }*/
     
     
     /**
      * Set a color theme from a properties file
      * @param props The Properties object
      * @param prefix The prefix to use when getting the keys
-     */
+     *
     public void setTheme(Properties props, String prefix) //throws Exception 
     {
         SyntaxStyle[] aStyles = getSyntaxStyles();
@@ -155,19 +152,19 @@ public class SourceCodeEditor extends SyntaxTextPane
         setBracketHighlightColor(parseColor(props.getProperty(prefix + ".brackethighlight.fg")));
         //setSelectionColor(parseColor(props.getProperty(prefix + ".selectioncolor.bg")));
         setLineHighlightColor(parseColor(props.getProperty(prefix + ".linehighlight.fg")));
-        /*gutter.setForeground(parseColor(props.getProperty(prefix + ".gutter.fg")));
-        gutter.setBackground(parseColor(props.getProperty(prefix + ".gutter.bg")));
-        gutter.setDividerForeground(parseColor(props.getProperty(prefix + ".divider.fg")));
-        gutter.setDividerBackground(parseColor(props.getProperty(prefix + ".divider.bg")));
-        gutter.setCurrentLineForeground(parseColor(props.getProperty(prefix + ".currentline.fg")));
-        gutter.setCurrentLineBackground(parseColor(props.getProperty(prefix + ".currentline.bg")));
-        gutter.setLineIntervalForeground(parseColor(props.getProperty(prefix + ".lineinterval.fg")));
-        gutter.setLineIntervalBackground(parseColor(props.getProperty(prefix + ".lineinterval.bg")));
-        gutter.setSelectionForeground(parseColor(props.getProperty(prefix + ".gutterselection.fg")));
-        gutter.setSelectionBackground(parseColor(props.getProperty(prefix + ".gutterselection.bg")));
-        gutter.setBracketScopeForeground(parseColor(props.getProperty(prefix + ".bracketscope.fg")));
-        gutter.setBracketScopeBackground(parseColor(props.getProperty(prefix + ".bracketscope.bg")));*/
-    }
+        //gutter.setForeground(parseColor(props.getProperty(prefix + ".gutter.fg")));
+        //gutter.setBackground(parseColor(props.getProperty(prefix + ".gutter.bg")));
+        //gutter.setDividerForeground(parseColor(props.getProperty(prefix + ".divider.fg")));
+        //gutter.setDividerBackground(parseColor(props.getProperty(prefix + ".divider.bg")));
+        //gutter.setCurrentLineForeground(parseColor(props.getProperty(prefix + ".currentline.fg")));
+        //gutter.setCurrentLineBackground(parseColor(props.getProperty(prefix + ".currentline.bg")));
+        //gutter.setLineIntervalForeground(parseColor(props.getProperty(prefix + ".lineinterval.fg")));
+        //gutter.setLineIntervalBackground(parseColor(props.getProperty(prefix + ".lineinterval.bg")));
+        //gutter.setSelectionForeground(parseColor(props.getProperty(prefix + ".gutterselection.fg")));
+        //gutter.setSelectionBackground(parseColor(props.getProperty(prefix + ".gutterselection.bg")));
+        //gutter.setBracketScopeForeground(parseColor(props.getProperty(prefix + ".bracketscope.fg")));
+        //gutter.setBracketScopeBackground(parseColor(props.getProperty(prefix + ".bracketscope.bg")));
+    }*/
     
     /**
      * Parse a color from the syntax.properties file. It can have the format
