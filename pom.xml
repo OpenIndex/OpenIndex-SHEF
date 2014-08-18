@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <name>OpenIndex-SHEF_dev</name>
-  <version>0.2-SNAPSHOT</version>
+  <name>OpenIndex-SHEF_v0.2</name>
+  <version>0.2</version>
   <url>http://openestate.org</url>
   <groupId>com.openindex.libs</groupId>
   <artifactId>OpenIndex-SHEF</artifactId>
