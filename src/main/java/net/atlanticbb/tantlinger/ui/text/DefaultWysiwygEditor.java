@@ -1,6 +1,6 @@
 /**
  * DefaultWysiwygEditor.java
- * $Id$
+ * $Id: DefaultWysiwygEditor.java 2042 2013-02-11 08:45:48Z andy $
  * Copyright (C) 2007-2012, Andreas Rudolph
  */
 package net.atlanticbb.tantlinger.ui.text;
@@ -13,23 +13,29 @@ import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.event.CaretListener;
 import javax.swing.text.Document;
-import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.undo.UndoManager;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
+import org.bushe.swing.action.ActionList;
 
 /**
  * DefaultWysiwygEditor.
- * <br/>$Id$
+ * <br/>$Id: DefaultWysiwygEditor.java 2042 2013-02-11 08:45:48Z andy $
  * @author Andreas Rudolph
  */
 public class DefaultWysiwygEditor extends AbstractWysiwygEditor
 {
   private JEditorPane textArea;
   private JScrollPane scroller;
+  private DefaultWysiwygToolBar toolBar = null;
 
   public DefaultWysiwygEditor()
   {
-    build();
+    this( null );
+  }
+
+  public DefaultWysiwygEditor( HTMLEditorKit htmlEditorKit )
+  {
+    build( htmlEditorKit );
   }
 
   @Override
@@ -50,14 +56,21 @@ public class DefaultWysiwygEditor extends AbstractWysiwygEditor
     textArea.addMouseListener( listener );
   }
 
-  private void build()
+  private void build( HTMLEditorKit htmlEditorKit )
   {
     textArea = new JEditorPane();
     textArea.setOpaque( true );
     scroller = new JScrollPane( textArea );
-    textArea.setEditorKitForContentType( "text/html", new WysiwygHTMLEditorKit() );
+    textArea.setEditorKitForContentType( "text/html",
+      (htmlEditorKit!=null)? htmlEditorKit: new WysiwygHTMLEditorKit() );
     textArea.setContentType( "text/html" );
     insertHTML( "<p></p>", 0 );
+  }
+
+  @Override
+  public int getCaretPosition()
+  {
+    return textArea.getCaretPosition();
   }
 
   @Override
@@ -85,6 +98,19 @@ public class DefaultWysiwygEditor extends AbstractWysiwygEditor
   }
 
   @Override
+  public AbstractToolBar getToolBar()
+  {
+    if (toolBar==null)
+    {
+      synchronized (this)
+      {
+        toolBar = new DefaultWysiwygToolBar( this );
+      }
+    }
+    return toolBar;
+  }
+
+  @Override
   public void insertHTML( String html, int location )
   {
     try
@@ -98,6 +124,12 @@ public class DefaultWysiwygEditor extends AbstractWysiwygEditor
     {
       ex.printStackTrace();
     }
+  }
+
+  @Override
+  public void registerEditor( ActionList actions )
+  {
+    actions.putContextValueForAll( HTMLTextEditAction.EDITOR, textArea );
   }
 
   @Override

@@ -1,4 +1,4 @@
-# OpenIndex-SHEF 0.1
+# OpenIndex-SHEF 0.2
 OpenIndex-SHEF is a fork of [SHEF - Swing HTML Editor Framework](http://shef.sourceforge.net/), that is unfortunately not actively developed anymore.
 
 ## Features
@@ -15,7 +15,7 @@ OpenIndex-SHEF is a fork of [SHEF - Swing HTML Editor Framework](http://shef.sou
 * syntax highlighting for HTML code was replaced by [RSyntaxTextArea](http://fifesoft.com/rsyntaxtextarea/)
 
 ## Requirements
-* Java 5
+* Java 6
 
 ## Dependencies
 * [RSyntaxTextArea](http://fifesoft.com/rsyntaxtextarea/) 2.5.3
