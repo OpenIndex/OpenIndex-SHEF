@@ -1,5 +1,5 @@
 OpenIndex-SHEF 0.3
-------------------
+==================
 
 OpenIndex-SHEF is a fork of [SHEF - Swing HTML Editor Framework](http://shef.sourceforge.net/), that is unfortunately not actively developed anymore.
 
