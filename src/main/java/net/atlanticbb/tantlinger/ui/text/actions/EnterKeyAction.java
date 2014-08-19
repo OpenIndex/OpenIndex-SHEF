@@ -26,18 +26,18 @@ import net.atlanticbb.tantlinger.ui.text.HTMLUtils;
 
 /**
  * Action which properly inserts breaks for an HTMLDocument
- * 
+ *
  * @author Bob Tantlinger
  *
  */
 public class EnterKeyAction extends DecoratedTextAction
-{    
+{
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     //private Action delegate = null;
-    
+
     /**
      * Creates a new EnterKeyAction.
      * @param defaultEnterAction Should be the default action
@@ -47,20 +47,24 @@ public class EnterKeyAction extends DecoratedTextAction
         super("EnterAction", defaultEnterAction);
         //delegate = defaultEnterAction;
     }
-    
+
     public void actionPerformed(ActionEvent e)
     {
         JEditorPane editor;
         HTMLDocument document;
-        
+
         try
         {
             editor = (JEditorPane)getTextComponent(e);
-            document = (HTMLDocument)editor.getDocument();             
+            if (!editor.isEditable() || !editor.isEnabled())
+            {
+                return;
+            }
+            document = (HTMLDocument)editor.getDocument();
         }
         catch(ClassCastException ex)
         {
-            // don't know what to do with this type 
+            // don't know what to do with this type
             // so pass off the event to the delegate
             delegate.actionPerformed(e);
             return;
@@ -74,11 +78,11 @@ public class EnterKeyAction extends DecoratedTextAction
 
         CompoundUndoManager.beginCompoundEdit(document);
         try
-        {            
+        {
             if(HTMLUtils.isImplied(elem))
-            {                
+            {
                 //are we inside a list item?
-                if(parentTag.equals(HTML.Tag.LI))               
+                if(parentTag.equals(HTML.Tag.LI))
                 {
                     //does the list item have any contents
                     if(parentElem.getEndOffset() - parentElem.getStartOffset() > 1)
@@ -92,54 +96,54 @@ public class EnterKeyAction extends DecoratedTextAction
                         else if(caret < parentElem.getEndOffset() - 1 && caret > parentElem.getStartOffset())
                         {
                             int len = parentElem.getEndOffset() - caret;
-                            txt = document.getText(caret, len);                            
+                            txt = document.getText(caret, len);
                             caret--;// hmmm
                             document.insertAfterEnd(parentElem, toListItem(txt));
                             document.remove(caret, len);
-                        }                        
+                        }
                         else//caret at end of list item
                         {
                             document.insertAfterEnd(parentElem, toListItem(txt));
                         }
-                        
+
                         editor.setCaretPosition(caret + 1);
                     }
                     else// empty list item
                     {
-                        Element listParentElem = HTMLUtils.getListParent(parentElem).getParentElement();                        
+                        Element listParentElem = HTMLUtils.getListParent(parentElem).getParentElement();
                         //System.out.println(listParentElem.getName());
-                        
+
                         if(isListItem(HTML.getTag(listParentElem.getName())))//nested list
-                        {                           
+                        {
                             //System.out.println("nested list============");
-                            
+
                             //document.insertAfterEnd(parentElem, (toListItem("")));
                             //editor.setCaretPosition(elem.getEndOffset());
                             HTML.Tag listParentTag = HTML.getTag(HTMLUtils.getListParent(listParentElem).toString());
-                            /*HTMLEditorKit.InsertHTMLTextAction a = 
+                            /*HTMLEditorKit.InsertHTMLTextAction a =
                                 new HTMLEditorKit.InsertHTMLTextAction("insert",
-                                "", listParentTag, HTML.Tag.LI);                            
+                                "", listParentTag, HTML.Tag.LI);
                             a.actionPerformed(e);*/
                             int start = parentElem.getStartOffset();
-                            
+
                             Element nextElem = HTMLUtils.getNextElement(document, parentElem);
-                            
+
                             int len = nextElem.getEndOffset() - start;
-                            
+
                             String ml = HTMLUtils.getElementHTML(listParentElem, true);
                             //System.out.println(ml);
                             //System.out.println("------------------");
-                            
+
                             ml = ml.replaceFirst("\\<li\\>\\s*\\<\\/li\\>\\s*\\<\\/ul\\>", "</ul>");
                             ml = ml.replaceFirst("\\<ul\\>\\s*\\<\\/ul\\>", "");
                             //System.out.println(ml);
-                            
+
                             document.setOuterHTML(listParentElem, ml);
                             //document.remove(start, len);
                             //HTMLUtils.removeElement(elem);
-                            
-                            
-                            
+
+
+
                         }//are we directly under a table cell?
                         else if(listParentElem.getName().equals("td"))
                         {
@@ -150,38 +154,38 @@ public class EnterKeyAction extends DecoratedTextAction
                             editor.setCaretPosition(caret + 1);
                         }
                         else //end the list
-                        {                       
+                        {
                             if(isInList(listParentElem))
                             {
                                 //System.out.println("======nested list============");
                                 HTML.Tag listParentTag = HTML.getTag(HTMLUtils.getListParent(listParentElem).toString());
-                                HTMLEditorKit.InsertHTMLTextAction a = 
+                                HTMLEditorKit.InsertHTMLTextAction a =
                                     new HTMLEditorKit.InsertHTMLTextAction("insert",
-                                    "<li></li>", listParentTag, HTML.Tag.LI);                            
+                                    "<li></li>", listParentTag, HTML.Tag.LI);
                                 a.actionPerformed(e);
                             }
                             else
-                            {                            
+                            {
                                 HTML.Tag root = HTML.Tag.BODY;
-                                if(HTMLUtils.getParent(elem, HTML.Tag.TD) != null)                            
+                                if(HTMLUtils.getParent(elem, HTML.Tag.TD) != null)
                                     root = HTML.Tag.TD;
-                                
-                                HTMLEditorKit.InsertHTMLTextAction a = 
+
+                                HTMLEditorKit.InsertHTMLTextAction a =
                                     new HTMLEditorKit.InsertHTMLTextAction("insert",
-                                    "<p></p>", root, HTML.Tag.P);                            
+                                    "<p></p>", root, HTML.Tag.P);
                                 a.actionPerformed(e);
                             }
-                            
+
                             HTMLUtils.removeElement(parentElem);
                         }
                     }
-                }                
+                }
                 else //not a list
                 {
                     //System.out.println("IMPLIED DEFAULT");
                     //System.out.println("elem: " + elem.getName());
                     //System.out.println("pelem: " + parentElem.getName());
-                                        
+
                     if(parentTag.isPreformatted())
                     {
                         insertImpliedBR(e);
@@ -204,12 +208,12 @@ public class EnterKeyAction extends DecoratedTextAction
                 }
             }
             else //not implied
-            {                
+            {
                 //we need to check for this here in case any straggling li's
                 //or dd's exist
                 if(isListItem(tag))
                 {
-                    if((elem.getEndOffset() - editor.getCaretPosition()) == 1)                
+                    if((elem.getEndOffset() - editor.getCaretPosition()) == 1)
                     {
                         //System.out.println("inserting \\n ");
                         //caret at end of para
@@ -217,12 +221,12 @@ public class EnterKeyAction extends DecoratedTextAction
                         editor.setCaretPosition(editor.getCaretPosition() - 1);
                     }
                     else
-                    {                
+                    {
                         //System.out.println("NOT implied delegate");
                         delegate.actionPerformed(e);
                     }
                 }
-                else 
+                else
                 {
                     //System.out.println("not implied insertparaafter1 " + elem.getName());
                     insertParagraphAfter(elem, editor);
@@ -235,23 +239,23 @@ public class EnterKeyAction extends DecoratedTextAction
         }
         CompoundUndoManager.endCompoundEdit(document);
     }
-    
+
     private boolean isListItem(HTML.Tag t)
     {
         return (t.equals(HTML.Tag.LI) ||
             t.equals(HTML.Tag.DT) || t.equals(HTML.Tag.DD));
     }
-    
+
     private String toListItem(String txt)
-    {        
+    {
         return "<li>" + txt + "</li>";
     }
-    
+
     private boolean isInList(Element el)
     {
-        return HTMLUtils.getListParent(el) != null;        
+        return HTMLUtils.getListParent(el) != null;
     }
-    
+
     private void insertImpliedBR(ActionEvent e)
     {
         HTMLEditorKit.InsertHTMLTextAction hta =
@@ -259,42 +263,42 @@ public class EnterKeyAction extends DecoratedTextAction
                 "<br>", HTML.Tag.IMPLIED, HTML.Tag.BR);
         hta.actionPerformed(e);
     }
-    
-    private void encloseInDIV(Element elem, HTMLDocument document) 
+
+    private void encloseInDIV(Element elem, HTMLDocument document)
     throws Exception
     {
         //System.out.println("enclosing in div: " + elem.getName());
         HTML.Tag tag = HTML.getTag(elem.getName());
         String html = HTMLUtils.getElementHTML(elem, false);
-        html = HTMLUtils.createTag(tag, 
+        html = HTMLUtils.createTag(tag,
             elem.getAttributes(), "<div>" + html + "</div><div></div>");
-        
+
         document.setOuterHTML(elem, html);
     }
-    
+
     /**
      * Inserts a paragraph after the current paragraph of the same type
-     * 
+     *
      * @param elem
      * @param editor
      * @throws BadLocationException
      * @throws java.io.IOException
      */
-    private void insertParagraphAfter(Element elem, JEditorPane editor) 
+    private void insertParagraphAfter(Element elem, JEditorPane editor)
     throws BadLocationException, java.io.IOException
     {
         int cr = editor.getCaretPosition();
-        HTMLDocument document = (HTMLDocument)elem.getDocument();        
+        HTMLDocument document = (HTMLDocument)elem.getDocument();
         HTML.Tag t = HTML.getTag(elem.getName());
         int endOffs = elem.getEndOffset();
         int startOffs = elem.getStartOffset();
-        
+
         //if this is an implied para, make the new para a div
         if(t == null || elem.getName().equals("p-implied"))
-            t = HTML.Tag.DIV; 
-        
+            t = HTML.Tag.DIV;
 
-        String html;        
+
+        String html;
         //got to test for this here, otherwise <hr> and <br>
         //get duplicated
         if(cr == startOffs)
@@ -304,11 +308,11 @@ public class EnterKeyAction extends DecoratedTextAction
         else //split the current para at the cursor position
         {
             StringWriter out = new StringWriter();
-            ElementWriter w = new ElementWriter(out, elem, startOffs, cr);                    
+            ElementWriter w = new ElementWriter(out, elem, startOffs, cr);
             w.write();
-            html = createBlock(t, elem, out.toString());            
+            html = createBlock(t, elem, out.toString());
         }
-        
+
         if(cr == endOffs - 1)
         {
             html += createBlock(t, elem, "");
@@ -318,9 +322,9 @@ public class EnterKeyAction extends DecoratedTextAction
             StringWriter out = new StringWriter();
             ElementWriter w = new ElementWriter(out, elem, cr, endOffs);
             w.write();
-            html += createBlock(t, elem, out.toString());            
+            html += createBlock(t, elem, out.toString());
         }
-        
+
         //copy the current para's character attributes
         AttributeSet chAttribs;
         if(endOffs > startOffs && cr == endOffs - 1)
@@ -329,33 +333,33 @@ public class EnterKeyAction extends DecoratedTextAction
             chAttribs = new SimpleAttributeSet(document.getCharacterElement(cr).getAttributes());
 
         document.setOuterHTML(elem, html);
-        
+
         cr++;
         Element p = document.getParagraphElement(cr);
         if(cr == endOffs)
         {
             //update the character attributes for the added paragraph
-            //FIXME If the added paragraph is at the start/end 
-            //of the document, the char attrs dont get set           
-            setCharAttribs(p, chAttribs);            
+            //FIXME If the added paragraph is at the start/end
+            //of the document, the char attrs dont get set
+            setCharAttribs(p, chAttribs);
         }
-       
-        editor.setCaretPosition(p.getStartOffset());        
+
+        editor.setCaretPosition(p.getStartOffset());
     }
-    
+
     private String createBlock(HTML.Tag t, Element elem, String html)
     {
         AttributeSet attribs = elem.getAttributes();
-        return HTMLUtils.createTag(t, attribs, 
-            HTMLUtils.removeEnclosingTags(elem, html));        
+        return HTMLUtils.createTag(t, attribs,
+            HTMLUtils.removeEnclosingTags(elem, html));
     }
-    
+
     private void setCharAttribs(Element p, AttributeSet chAttribs)
     {
         HTMLDocument document = (HTMLDocument)p.getDocument();
         int start = p.getStartOffset();
-        int end = p.getEndOffset();        
-        
+        int end = p.getEndOffset();
+
         SimpleAttributeSet sas = new SimpleAttributeSet(chAttribs);
         sas.removeAttribute(HTML.Attribute.SRC);
         //if the charattribs contains a br, hr, or img attribute, it'll erase
@@ -366,11 +370,11 @@ public class EnterKeyAction extends DecoratedTextAction
             Object n = ee.nextElement();
             String val = chAttribs.getAttribute(n).toString();
             ////System.out.println(n + " " + val);
-            skipAttribs = val.equals("br") || val.equals("hr") || val.equals("img");            
-        }       
-        
+            skipAttribs = val.equals("br") || val.equals("hr") || val.equals("img");
+        }
+
         if(!skipAttribs)
-            document.setCharacterAttributes(start, end - start, sas, true);   
+            document.setCharacterAttributes(start, end - start, sas, true);
     }
 
 }
