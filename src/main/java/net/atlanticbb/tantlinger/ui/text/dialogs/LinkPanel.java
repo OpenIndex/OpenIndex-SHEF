@@ -9,6 +9,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,7 +22,7 @@ import net.atlanticbb.tantlinger.ui.text.TextEditPopupManager;
 public class LinkPanel extends HTMLAttributeEditorPanel
 {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private JPanel hlinkPanel = null;
@@ -30,17 +31,17 @@ public class LinkPanel extends HTMLAttributeEditorPanel
     private JTextField urlField = null;
     private JTextField textField = null;
     private HTMLAttributeEditorPanel linkAttrPanel = null;
-    
-    private boolean urlFieldEnabled;    
-    
+
+    private boolean urlFieldEnabled;
+
     /**
      * This is the default constructor
      */
     public LinkPanel()
     {
-        this(true);           
+        this(true);
     }
-    
+
     /**
      * @param attr
      */
@@ -48,43 +49,55 @@ public class LinkPanel extends HTMLAttributeEditorPanel
     {
         this(new Hashtable(), urlFieldEnabled);
     }
-    
+
     public LinkPanel(Hashtable attr, boolean urlFieldEnabled)
+    {
+        this(attr, urlFieldEnabled, null);
+    }
+
+    public LinkPanel(Hashtable attr, boolean urlFieldEnabled, Set<String> hiddenAttributes)
     {
         super();
         this.urlFieldEnabled = urlFieldEnabled;
         initialize();
+        setHiddenAttributes(hiddenAttributes);
         setAttributes(attr);
         updateComponentsFromAttribs();
     }
-    
+
 
     public void updateComponentsFromAttribs()
     {
         linkAttrPanel.updateComponentsFromAttribs();
         if(attribs.containsKey("href"))         //$NON-NLS-1$
             urlField.setText(attribs.get("href").toString()); //$NON-NLS-1$
-        else 
+        else
             urlField.setText("");                        //$NON-NLS-1$
-    }    
-    
+    }
+
     public void updateAttribsFromComponents()
     {
-        linkAttrPanel.updateAttribsFromComponents();        
+        linkAttrPanel.updateAttribsFromComponents();
         attribs.put("href", urlField.getText());               //$NON-NLS-1$
     }
-    
+
     public void setAttributes(Map at)
-    {       
+    {
         super.setAttributes(at);
         linkAttrPanel.setAttributes(attribs);
     }
-    
+
+    public void setHiddenAttributes(Set hiddenAttribs)
+    {
+        super.setHiddenAttributes(hiddenAttribs);
+        linkAttrPanel.setHiddenAttributes(this.hiddenAttribs);
+    }
+
     public void setLinkText(String text)
     {
         textField.setText(text);
     }
-    
+
     public String getLinkText()
     {
         return textField.getText();
@@ -92,7 +105,7 @@ public class LinkPanel extends HTMLAttributeEditorPanel
 
     /**
      * This method initializes this
-     * 
+     *
      * @return void
      */
     private void initialize()
@@ -101,16 +114,16 @@ public class LinkPanel extends HTMLAttributeEditorPanel
         this.setSize(328, 218);
         this.add(getHlinkPanel(), java.awt.BorderLayout.NORTH);
         this.add(getLinkAttrPanel(), BorderLayout.CENTER);
-        
+
         TextEditPopupManager popupMan = TextEditPopupManager.getInstance();//new TextEditPopupManager();
         popupMan.registerJTextComponent(urlField);
         popupMan.registerJTextComponent(textField);
     }
 
     /**
-     * This method initializes hlinkPanel	
-     * 	
-     * @return javax.swing.JPanel	
+     * This method initializes hlinkPanel
+     *
+     * @return javax.swing.JPanel
      */
     private JPanel getHlinkPanel()
     {
@@ -153,9 +166,9 @@ public class LinkPanel extends HTMLAttributeEditorPanel
     }
 
     /**
-     * This method initializes urlField	
-     * 	
-     * @return javax.swing.JTextField	
+     * This method initializes urlField
+     *
+     * @return javax.swing.JTextField
      */
     private JTextField getUrlField()
     {
@@ -169,9 +182,9 @@ public class LinkPanel extends HTMLAttributeEditorPanel
     }
 
     /**
-     * This method initializes textField	
-     * 	
-     * @return javax.swing.JTextField	
+     * This method initializes textField
+     *
+     * @return javax.swing.JTextField
      */
     private JTextField getTextField()
     {
@@ -181,14 +194,14 @@ public class LinkPanel extends HTMLAttributeEditorPanel
         }
         return textField;
     }
-    
+
     private JPanel getLinkAttrPanel()
     {
         if(linkAttrPanel == null)
         {
             linkAttrPanel = new LinkAttributesPanel();
         }
-        
+
         return linkAttrPanel;
     }
 

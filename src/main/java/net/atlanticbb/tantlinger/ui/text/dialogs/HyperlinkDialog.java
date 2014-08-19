@@ -8,6 +8,7 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -79,6 +80,11 @@ public class HyperlinkDialog extends HTMLOptionDialog
     public void setAttributes(Map attribs)
     {
         linkPanel.setAttributes(attribs);
+    }
+
+    public void setHiddenAttributes(Set hiddenAttribs)
+    {
+        linkPanel.setHiddenAttributes(hiddenAttribs);
     }
 
     public void setLinkText(String text)

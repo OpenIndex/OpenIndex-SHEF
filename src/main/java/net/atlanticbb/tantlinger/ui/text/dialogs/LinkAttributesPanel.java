@@ -175,24 +175,46 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
             openInCB.setSelected(false);
             openInCombo.setEnabled(false);
         }
+
+        boolean targetVisible = !hiddenAttribs.contains("target");
+        boolean titleVisible = !hiddenAttribs.contains("title");
+        boolean nameVisible = !hiddenAttribs.contains("name");
+
+        openInCB.setVisible(targetVisible);
+        openInCombo.setVisible(targetVisible);
+        titleCB.setVisible(titleVisible);
+        titleField.setVisible(titleVisible);
+        nameCB.setVisible(nameVisible);
+        nameField.setVisible(nameVisible);
+
+        this.setVisible(targetVisible || titleVisible || nameVisible);
     }
 
     public void updateAttribsFromComponents()
     {
-        if(openInCB.isSelected())
-            attribs.put("target", TARGETS[openInCombo.getSelectedIndex()]); //$NON-NLS-1$
-        else
-            attribs.remove("target"); //$NON-NLS-1$
+        if(!hiddenAttribs.contains("target"))
+        {
+            if(openInCB.isSelected())
+                attribs.put("target", TARGETS[openInCombo.getSelectedIndex()]); //$NON-NLS-1$
+            else
+                attribs.remove("target"); //$NON-NLS-1$
+        }
 
-        if(titleCB.isSelected())
-            attribs.put("title", titleField.getText()); //$NON-NLS-1$
-        else
-            attribs.remove("title"); //$NON-NLS-1$
+        if(!hiddenAttribs.contains("title"))
+        {
+            if(titleCB.isSelected())
+                attribs.put("title", titleField.getText()); //$NON-NLS-1$
+            else
+                attribs.remove("title"); //$NON-NLS-1$
+        }
 
-        if(nameCB.isSelected())
-            attribs.put("name", nameField.getText()); //$NON-NLS-1$
-        else
-            attribs.remove("name"); //$NON-NLS-1$
+        if(!hiddenAttribs.contains("name"))
+        {
+            if(nameCB.isSelected())
+                attribs.put("name", nameField.getText()); //$NON-NLS-1$
+            else
+                attribs.remove("name"); //$NON-NLS-1$
+        }
     }
 
     /**
