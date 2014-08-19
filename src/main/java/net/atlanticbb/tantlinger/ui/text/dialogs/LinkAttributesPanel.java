@@ -19,12 +19,12 @@ import net.atlanticbb.tantlinger.ui.text.TextEditPopupManager;
 public class LinkAttributesPanel extends HTMLAttributeEditorPanel
 {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
-    private static final String NEW_WIN = "New Window"; //$NON-NLS-1$
-    private static final String SAME_WIN = "Same Window"; //$NON-NLS-1$
-    private static final String SAME_FRAME = "Same Frame"; //$NON-NLS-1$
+    private static final String NEW_WIN = i18n.str("new_window"); //$NON-NLS-1$
+    private static final String SAME_WIN = i18n.str("same_window"); //$NON-NLS-1$
+    private static final String SAME_FRAME = i18n.str("same_frame"); //$NON-NLS-1$
     private static final String TARGET_LABELS[] =
     {NEW_WIN, SAME_WIN, SAME_FRAME};
     private static final String TARGETS[] = {"_blank", "_top", "_self"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -34,23 +34,23 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
     private JTextField nameField = null;
     private JTextField titleField = null;
     private JComboBox openInCombo = null;
-    private JPanel spacerPanel = null; 
-    
-    
+    private JPanel spacerPanel = null;
+
+
 
     /**
-     * This method initializes 
-     * 
+     * This method initializes
+     *
      */
-    public LinkAttributesPanel() 
+    public LinkAttributesPanel()
     {
-        super();        
+        super();
         initialize();
         updateComponentsFromAttribs();
     }
-    
-    
-    
+
+
+
     public void setEnabled(boolean b)
     {
         super.setEnabled(b);
@@ -64,9 +64,9 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
 
     /**
      * This method initializes this
-     * 
+     *
      */
-    private void initialize() 
+    private void initialize()
     {
         GridBagConstraints gridBagConstraints6 = new GridBagConstraints();
         gridBagConstraints6.gridx = 0;
@@ -122,11 +122,11 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
         this.add(getTitleField(), gridBagConstraints4);
         this.add(getOpenInCombo(), gridBagConstraints5);
         this.add(getSpacerPanel(), gridBagConstraints6);
-        
-        
+
+
         TextEditPopupManager.getInstance().registerJTextComponent(nameField);
         TextEditPopupManager.getInstance().registerJTextComponent(titleField);
-    		
+
     }
 
     public void updateComponentsFromAttribs()
@@ -137,13 +137,13 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
             nameField.setEditable(true);
             nameField.setText(attribs.get("name").toString()); //$NON-NLS-1$
         }
-        else 
+        else
         {
             nameCB.setSelected(false);
             nameField.setEditable(false);
         }
-        
-        
+
+
         if(attribs.containsKey("title")) //$NON-NLS-1$
         {
             titleCB.setSelected(true);
@@ -155,7 +155,7 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
             titleCB.setSelected(false);
             titleField.setEditable(false);
         }
-        
+
         if(attribs.containsKey("target")) //$NON-NLS-1$
         {
             openInCB.setSelected(true);
@@ -168,37 +168,59 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
                     openInCombo.setSelectedIndex(i);
                     break;
                 }
-            }            
+            }
         }
         else
         {
             openInCB.setSelected(false);
             openInCombo.setEnabled(false);
         }
+
+        boolean targetVisible = !hiddenAttribs.contains("target");
+        boolean titleVisible = !hiddenAttribs.contains("title");
+        boolean nameVisible = !hiddenAttribs.contains("name");
+
+        openInCB.setVisible(targetVisible);
+        openInCombo.setVisible(targetVisible);
+        titleCB.setVisible(titleVisible);
+        titleField.setVisible(titleVisible);
+        nameCB.setVisible(nameVisible);
+        nameField.setVisible(nameVisible);
+
+        this.setVisible(targetVisible || titleVisible || nameVisible);
     }
 
     public void updateAttribsFromComponents()
     {
-        if(openInCB.isSelected())
-            attribs.put("target", TARGETS[openInCombo.getSelectedIndex()]); //$NON-NLS-1$
-        else
-            attribs.remove("target"); //$NON-NLS-1$
-        
-        if(titleCB.isSelected())
-            attribs.put("title", titleField.getText()); //$NON-NLS-1$
-        else
-            attribs.remove("title"); //$NON-NLS-1$
-        
-        if(nameCB.isSelected())
-            attribs.put("name", nameField.getText()); //$NON-NLS-1$
-        else
-            attribs.remove("name"); //$NON-NLS-1$
+        if(!hiddenAttribs.contains("target"))
+        {
+            if(openInCB.isSelected())
+                attribs.put("target", TARGETS[openInCombo.getSelectedIndex()]); //$NON-NLS-1$
+            else
+                attribs.remove("target"); //$NON-NLS-1$
+        }
+
+        if(!hiddenAttribs.contains("title"))
+        {
+            if(titleCB.isSelected())
+                attribs.put("title", titleField.getText()); //$NON-NLS-1$
+            else
+                attribs.remove("title"); //$NON-NLS-1$
+        }
+
+        if(!hiddenAttribs.contains("name"))
+        {
+            if(nameCB.isSelected())
+                attribs.put("name", nameField.getText()); //$NON-NLS-1$
+            else
+                attribs.remove("name"); //$NON-NLS-1$
+        }
     }
 
     /**
-     * This method initializes nameCB	
-     * 	
-     * @return javax.swing.JCheckBox	
+     * This method initializes nameCB
+     *
+     * @return javax.swing.JCheckBox
      */
     private JCheckBox getNameCB()
     {
@@ -218,9 +240,9 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
     }
 
     /**
-     * This method initializes titleCB	
-     * 	
-     * @return javax.swing.JCheckBox	
+     * This method initializes titleCB
+     *
+     * @return javax.swing.JCheckBox
      */
     private JCheckBox getTitleCB()
     {
@@ -240,9 +262,9 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
     }
 
     /**
-     * This method initializes openInCB	
-     * 	
-     * @return javax.swing.JCheckBox	
+     * This method initializes openInCB
+     *
+     * @return javax.swing.JCheckBox
      */
     private JCheckBox getOpenInCB()
     {
@@ -262,9 +284,9 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
     }
 
     /**
-     * This method initializes nameField	
-     * 	
-     * @return javax.swing.JTextField	
+     * This method initializes nameField
+     *
+     * @return javax.swing.JTextField
      */
     private JTextField getNameField()
     {
@@ -276,9 +298,9 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
     }
 
     /**
-     * This method initializes titleField	
-     * 	
-     * @return javax.swing.JTextField	
+     * This method initializes titleField
+     *
+     * @return javax.swing.JTextField
      */
     private JTextField getTitleField()
     {
@@ -290,9 +312,9 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
     }
 
     /**
-     * This method initializes openInCombo	
-     * 	
-     * @return javax.swing.JComboBox	
+     * This method initializes openInCombo
+     *
+     * @return javax.swing.JComboBox
      */
     private JComboBox getOpenInCombo()
     {
@@ -304,9 +326,9 @@ public class LinkAttributesPanel extends HTMLAttributeEditorPanel
     }
 
     /**
-     * This method initializes spacerPanel	
-     * 	
-     * @return javax.swing.JPanel	
+     * This method initializes spacerPanel
+     *
+     * @return javax.swing.JPanel
      */
     private JPanel getSpacerPanel()
     {
