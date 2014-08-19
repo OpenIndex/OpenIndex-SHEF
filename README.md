@@ -48,7 +48,7 @@ Todo
 * further testing
 * add missing javadoc comments
 * publish at Maven Central Repository
-* remove dependcies to [Swing Action Manager](https://java.net/projects/sam)
+* remove dependencies to [Swing Action Manager](https://java.net/projects/sam)
 
 
 Further informations
