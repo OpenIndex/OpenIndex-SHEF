@@ -25,4 +25,6 @@ OpenIndex-SHEF is a fork of [SHEF - Swing HTML Editor Framework](http://shef.sou
 [GNU Lesser General Public License 2.1](http://www.gnu.org/licenses/lgpl-2.1-standalone.html)
 
 ## Todo
-* write a todo list ;)
+* further testing
+* add missing javadoc comments
+* publish at Maven Central Repository
