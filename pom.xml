@@ -11,6 +11,8 @@
   <modelVersion>4.0.0</modelVersion>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.baseName>OpenIndex-SHEF</project.baseName>
+    <project.releaseDir>${basedir}/release</project.releaseDir>
   </properties>
   <repositories>
     <repository>
@@ -67,6 +69,21 @@
   <build>
     <plugins>
 
+      <!-- clean -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <failOnError>false</failOnError>
+          <filesets>
+            <fileset>
+              <directory>${project.releaseDir}</directory>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
       <!-- compiler -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -77,6 +94,57 @@
           <target>1.6</target>
           <showDeprecation>true</showDeprecation>
           <debug>false</debug>
+        </configuration>
+      </plugin>
+
+      <!-- source -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- javadoc -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <quiet>true</quiet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- assembly -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.4</version>
+        <inherited>false</inherited>
+        <configuration>
+          <finalName>${project.baseName}-${project.version}-release</finalName>
+          <outputDirectory>${project.releaseDir}</outputDirectory>
+          <appendAssemblyId>false</appendAssemblyId>
+          <attach>false</attach>
+          <useAllReactorProjects>true</useAllReactorProjects>
+          <descriptors>
+            <descriptor>assembly.xml</descriptor>
+          </descriptors>
         </configuration>
       </plugin>
 
