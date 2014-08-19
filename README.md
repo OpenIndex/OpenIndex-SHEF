@@ -21,6 +21,7 @@ Differences to original SHEF
 ----------------------------
 
 * syntax highlighting for HTML code was replaced by [RSyntaxTextArea](http://fifesoft.com/rsyntaxtextarea/)
+* fixes from [VEDAGroup](https://github.com/VEDAGroup/SHEF) up to [v1.2.0](https://github.com/VEDAGroup/SHEF/tree/c2d0286703c45030c71c27ab816124872511a944) were integrated
 
 
 Requirements
@@ -55,4 +56,4 @@ Further informations
 --------------------
 
 * original [SHEF - Swing HTML Editor Framework](http://shef.sourceforge.net/)
-* an [alternative SHEF fork](https://github.com/VEDAGroup/SHEF), changes [up to v1.2.0](https://github.com/VEDAGroup/SHEF/tree/c2d0286703c45030c71c27ab816124872511a944) were integrated into `OpenIndex-SHEF`
+* an [alternative SHEF fork](https://github.com/VEDAGroup/SHEF) by [VEDAGroup](https://github.com/VEDAGroup)
