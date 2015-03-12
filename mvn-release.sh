@@ -6,4 +6,4 @@ export LANG=en
 set -e
 
 cd $PROJECT_DIR
-$MVN clean install javadoc:aggregate assembly:single
+$MVN -DcreateChecksum=true clean install javadoc:aggregate assembly:single
