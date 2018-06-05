@@ -23,4 +23,4 @@ export LANG=en
 set -e
 
 cd $PROJECT_DIR
-$MVN findbugs:check findbugs:gui
+$MVN -Popenindex-release clean deploy

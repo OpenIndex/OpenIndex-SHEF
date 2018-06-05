@@ -2,23 +2,52 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <name>OpenIndex-SHEF</name>
-  <version>0.4-SNAPSHOT</version>
-  <url>http://openestate.org</url>
+  <modelVersion>4.0.0</modelVersion>
+
   <groupId>com.openindex.libs</groupId>
   <artifactId>OpenIndex-SHEF</artifactId>
+  <version>0.4-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <modelVersion>4.0.0</modelVersion>
+
+  <name>OpenIndex-SHEF</name>
+  <description>OpenIndex-SHEF is a fork of Swing HTML Editor Framework written in Java.</description>
+  <url>https://openindex.de/</url>
+  <organization>
+    <name>OpenIndex</name>
+    <url>https://openindex.de/</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License, Version 2.1</name>
+      <url>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+      <distribution>repo</distribution>
+      <comments>A free software license published by the Free Software Foundation (FSF)</comments>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>andy</id>
+      <name>Andreas Rudolph</name>
+      <email>andy@openindex.de</email>
+      <organization>OpenIndex</organization>
+      <organizationUrl>https://openindex.de/</organizationUrl>
+    </developer>
+  </developers>
+
   <properties>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.baseName>OpenIndex-SHEF</project.baseName>
     <project.releaseDir>${basedir}/release</project.releaseDir>
   </properties>
+
   <repositories>
     <repository>
-      <id>OpenEstate.org</id>
-      <name>OpenEstate.org</name>
-      <url>http://maven.openestate.org/</url>
+      <id>openindex</id>
+      <name>OpenIndex.de</name>
+      <url>https://maven.openindex.de/repository/pool/</url>
       <releases>
         <enabled>true</enabled>
         <checksumPolicy>fail</checksumPolicy>
@@ -29,11 +58,12 @@
       </snapshots>
     </repository>
   </repositories>
+
   <dependencies>
 
     <!-- compile -->
     <dependency>
-      <groupId>com.openindex.3rdparty</groupId>
+      <groupId>de.openindex.3rdparty</groupId>
       <artifactId>SwingActionManager</artifactId>
       <version>0.8.1</version>
       <scope>compile</scope>
@@ -66,13 +96,15 @@
     </dependency>
 
   </dependencies>
+
   <build>
     <plugins>
 
       <!-- clean -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>2.6.1</version>
+        <version>3.1.0</version>
         <configuration>
           <failOnError>false</failOnError>
           <filesets>
@@ -88,12 +120,19 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.2</version>
+        <version>3.7.0</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-          <showDeprecation>true</showDeprecation>
-          <debug>false</debug>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+
+      <!-- resources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
 
@@ -101,12 +140,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.4</version>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
             <goals>
-              <goal>jar</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
@@ -116,7 +155,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.1</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -125,7 +164,24 @@
             </goals>
             <configuration>
               <quiet>true</quiet>
+              <encoding>UTF-8</encoding>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- signing -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -134,7 +190,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.5.3</version>
+        <version>3.1.0</version>
         <inherited>false</inherited>
         <configuration>
           <finalName>${project.baseName}-${project.version}-release</finalName>
@@ -152,12 +208,49 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.5</version>
         <configuration>
           <failOnError>false</failOnError>
+          <excludeFilterFile>${project.basedir}/findbugs-exclude.xml</excludeFilterFile>
         </configuration>
       </plugin>
 
     </plugins>
   </build>
+
+  <profiles>
+
+    <!-- development profile -->
+    <profile>
+      <id>development</id>
+      <properties>
+        <createChecksum>true</createChecksum>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <gpg.skip>true</gpg.skip>
+        <source.skip>true</source.skip>
+      </properties>
+    </profile>
+
+    <!-- release profile for maven.openindex.de -->
+    <profile>
+      <id>openindex-release</id>
+      <properties>
+        <createChecksum>true</createChecksum>
+        <maven.javadoc.skip>false</maven.javadoc.skip>
+        <gpg.skip>false</gpg.skip>
+        <source.skip>false</source.skip>
+      </properties>
+      <distributionManagement>
+        <repository>
+          <id>openindex</id>
+          <url>https://maven.openindex.de/repository/openindex-releases/</url>
+        </repository>
+        <snapshotRepository>
+          <id>openindex</id>
+          <url>https://maven.openindex.de/repository/openindex-snapshots/</url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+
+  </profiles>
 </project>
