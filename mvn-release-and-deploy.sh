@@ -6,4 +6,4 @@ export LANG=en
 set -e
 
 cd $PROJECT_DIR
-$MVN -Popenindex-release clean install javadoc:aggregate assembly:single
+$MVN -Popenindex-release clean deploy javadoc:aggregate assembly:single
